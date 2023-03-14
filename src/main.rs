@@ -53,10 +53,11 @@ impl Particle {
     }
 
     fn apply_gravity_to_particle(&mut self, position: Vec2, mass: f32) {
-        let g = 1.0;
+        let g = 0.3;
+        let min_distance = 2.5;
 
-        let abs_x = 1.0.max(abs(self.position.x - position.x));
-        let abs_y = 1.0.max(abs(self.position.y - position.y));
+        let abs_x = min_distance.max(abs(self.position.x - position.x));
+        let abs_y = min_distance.max(abs(self.position.y - position.y));
 
         let x_mult = if self.position.x > position.x {
             -1.0
@@ -69,7 +70,7 @@ impl Particle {
             1.0
         };
 
-        let distance = 1.0.max(f32::sqrt(pow(abs_x, 2) + pow(abs_y, 2)));
+        let distance = min_distance.max(f32::sqrt(pow(abs_x, 2) + pow(abs_y, 2)));
 
         let gravity = (g * mass) / pow(distance, 2);
         let gravity_x = x_mult * gravity * (abs_x / distance);
@@ -118,7 +119,7 @@ fn model(_app: &App) -> Model {
 
     let mut particles: Vec<Particle> = Vec::new();
     // Stars
-    for _ in 1..50 {
+    for _ in 1..100 {
         particles.push(Particle::new(
             random_f32() * (x_max - x_min) + x_min,
             random_f32() * (y_max - y_min) + y_min,
